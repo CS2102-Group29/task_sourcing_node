@@ -5,6 +5,8 @@ const router = Router();
 
 // list all tasks
 router.get('/', (req, res) => {
+    res.header({ 'Access-Control-Allow-Origin': '*' });
+
     dbClient.query('SELECT * FROM tasks')
         .then(dbres => res.json({ success: true, data: dbres }))
         .catch(err => res.json({ success: false, err: err }));
@@ -20,6 +22,8 @@ router.post('/new', (req, res) => {
     const taskee_email = req.body.taskee_email;
     const expiry_date = req.body.expiry_date;
 
+    res.header({ 'Access-Control-Allow-Origin': '*' });
+    
     var currentMaxId = 0;
     dbClient.query('SELECT MAX(id) FROM tasks').then(idres => {
         currentMaxId = idres.rows[0].max;
