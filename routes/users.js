@@ -18,6 +18,21 @@ router.get('/', (req, res) => {
     });
 });
 
+// get one user
+router.get('/:email', (req, res) => {
+    const email = req.params.email;
+
+    res.header({'Access-Control-Allow-Origin': '*'});
+
+    dbClient.query(`SELECT * FROM users WHERE email = '${email}'`, (err, dbres) => {
+        if (!err) {
+            res.json({success: true, data: dbres.rows});
+        } else {
+            res.json({success: false});
+        }
+    });
+})
+
 // create user
 router.post('/new', (req, res) => {
     const email = req.body.email;
