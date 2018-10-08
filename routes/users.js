@@ -63,4 +63,22 @@ router.post('/update/email/:email', (req, res) => {
                     })
 });
 
+// authenticate user (check email exists and password is correct)
+router.post('/authenticate', (req, res) => {
+    const email = req.body.email;
+    const password = req.body.password;
+    console.log(email);
+    console.log(password);
+    res.header({ 'Access-Control-Allow-Origin': '*' });
+
+    dbClient.query(`SELECT COUNT(*) FROM users 
+                    WHERE email = '${email}' AND password = '${password}'`, (err, dbres) => {
+                        if(dbres.rows[0].count === 1) {
+                            res.json({ success: true, email: email });
+                        } else {
+                            res.json({ success: false, msg: "The combination of email and password does not exist."})
+                        }
+                    });
+});
+
 module.exports = router;
