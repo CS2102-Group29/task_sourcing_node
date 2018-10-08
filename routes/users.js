@@ -16,11 +16,10 @@ router.post('/new', (req, res) => {
     const password = req.body.password;
     const name = req.body.name;
     const mobile = req.body.mobile;
-    const image_url = req.body.image_url;
 
     dbClient.query(`INSERT INTO users VALUES (
                         '${email}', '${password}', '${name}',
-                        '${mobile}', '${image_url}');`)
+                        '${mobile}', NULL);`)
         .then(res.json({ success: true, data: req.body }))
         .catch(err => res.json({ success: false, err: err }));
 });

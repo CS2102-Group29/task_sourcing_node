@@ -1,0 +1,53 @@
+<div id="modal_create_task" class="ui modal">
+    <span class="close icon"></span>
+    <div class="header">
+        Create Task
+    </div>
+    <div class="content">
+        <form action="http://localhost:4000/tasks/new" method="post" id="form_create_task" class="ui form">
+            <div class="field">
+                <label for="title">Title</label>
+                <input type="text" name="title" id="title" required>
+            </div>
+            <div class="two fields">
+                <div class="field">
+                    <label for="date">Date</label>
+                    <input type="date" name="date" id="date" required>
+                </div>
+                <div class="field">
+                    <label for="time">Time</label>
+                    <input type="time" name="time" id="time" required>
+                </div>
+            </div>
+            <div class="field">
+                <label for="loc">Location</label>
+                <input type="text" name="location" id="loc" required>
+            </div>
+            <div class="field">
+                <label for="taskee_email">Taskee Email</label>
+                <input type="email" name="taskee_email" id="taskee_email" required>
+            </div>
+            <div class="field">
+                <label for="exp_date">Expiry Date</label>
+                <input type="date" name="expiry_date" id="exp_date">
+        </div>
+            <div class="field">
+                <label for="desc">Description</label>
+                <textarea name="description" id="desc" rows="10"></textarea>
+            </div>
+        </form>
+    </div>
+    <div class="actions">
+        <div class="ui cancel button">
+            Cancel
+        </div>
+        <input type="reset" value="Reset" form="form_create_task" class="ui red button">
+        <input type="submit" value="Submit" form="form_create_task" class="ui blue button">
+    </div>
+</div>
+<link rel="stylesheet" href="../semantic.min.css">
+<script src="../jquery.min.js"></script>
+<script src="../semantic.min.js"></script>
+<script>
+    $('#modal_create_task').modal('show');
+</script>
