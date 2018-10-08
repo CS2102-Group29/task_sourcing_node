@@ -73,7 +73,7 @@ router.post('/authenticate', (req, res) => {
 
     dbClient.query(`SELECT COUNT(*) FROM users 
                     WHERE email = '${email}' AND password = '${password}'`, (err, dbres) => {
-                        if(dbres.rows[0].count === 1) {
+                        if(dbres.rows[0].count === "1") {
                             res.json({ success: true, email: email });
                         } else {
                             res.json({ success: false, msg: "The combination of email and password does not exist."})
