@@ -3,11 +3,17 @@ const dbClient = require('../app').dbClient;
 const { Router } = require('express');
 const router = Router();
 
+const { UNIQUE_VIOLATION } = require('pg-error-constants')
+
 // list all users
 router.get('/', (req, res) => {
-    dbClient.query('SELECT * FROM users')
-        .then(dbres => res.json({ success: true, data: dbres.rows }))
-        .catch(err => res.json({ success: false, err: err }));
+    dbClient.query('SELECT * FROM users', (err, dbres) => {
+        if(err) {
+            res.json({ success: false, err: err });
+        } else {
+           res.json({ success: true, data: dbres.rows });
+        }
+    });
 });
 
 // create user
@@ -19,9 +25,14 @@ router.post('/new', (req, res) => {
 
     dbClient.query(`INSERT INTO users VALUES (
                         '${email}', '${password}', '${name}',
-                        '${mobile}', NULL);`)
-        .then(res.json({ success: true, data: req.body }))
-        .catch(err => res.json({ success: false, err: err }));
+                        '${mobile}', NULL);`, (err, dbres) => {
+                            if(err && err.code === UNIQUE_VIOLATION) {
+                                res.header({ 'Access-Control-Allow-Origin': '*' });
+                                res.json({ success: false, msg: "User with the specified email already exists." })
+                            } else {
+                                res.json({ success: true, data: req.body });
+                            }
+                        });
 });
 
 module.exports = router;

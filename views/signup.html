@@ -85,8 +85,13 @@
             }
           }, onSuccess: function(event, fields) {
             event.preventDefault();
-            $.post('http://localhost:4000/users/new', fields).done((data) => {
-              //
+            $.post('http://localhost:4000/users/new', fields).done((res) => {
+              console.log(res);
+              if(res.success) {
+
+              } else {
+                alert(res.msg);
+              } 
             });
           }
         })
