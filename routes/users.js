@@ -54,26 +54,23 @@ router.post('/new', (req, res) => {
                         });
 });
 
-// update user
-router.post('/update/email/:email', (req, res) => {
+// update user info (exclusive of image_url)
+router.post('/updateinfo/:email', (req, res) => {
     const email = req.body.email;
-    const password = req.body.password;
     const name = req.body.name;
     const mobile = req.body.mobile;
-    const image_url = req.body.image_url;
 
     const old_email = req.params.email;
 
     res.header({ 'Access-Control-Allow-Origin': '*' });
 
     dbClient.query(`UPDATE users 
-                    SET email = '${email}', password = '${password}', name = '${name}',
-                        mobile = '${mobile}', image_url = '${image_url}'
+                    SET email = '${email}', name = '${name}', mobile = '${mobile}'
                     WHERE email = '${old_email}'`, (err, dbres) => {
                         if(err && err.code === UNIQUE_VIOLATION) {
-                            res.json({ success: false, msg: "User with the specified email already exists." })
+                            res.json({ success: false, msg: 'User with the specified email already exists.' })
                         } else {
-                            res.json({ success: true, data: req.body });
+                            res.json({ success: true, msg: 'Personal particulars are updated successfully.' });
                         }
                     })
 });
