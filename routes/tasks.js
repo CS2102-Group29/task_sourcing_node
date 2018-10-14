@@ -12,6 +12,15 @@ router.get('/', (req, res) => {
         .catch(err => res.json({ success: false, err: err }));
 });
 
+// get a single task based on id
+router.get('/:id', (req, res) => {
+    res.header({ 'Access-Control-Allow-Origin': '*' });
+
+    dbClient.query(`SELECT * FROM tasks WHERE id = ${req.params.id}`)
+        .then(dbres => res.json({ success: true, data: dbres.rows[0] }))
+        .catch(err => res.json({ success: false, err: err }));
+});
+
 // create task
 router.post('/new', (req, res) => {
     const title = req.body.title;
