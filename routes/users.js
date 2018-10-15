@@ -26,9 +26,9 @@ router.get('/:email', (req, res) => {
 
     dbClient.query(`SELECT * FROM users WHERE email = '${email}'`, (err, dbres) => {
         if (!err) {
-            res.json({success: true, data: dbres.rows});
+            res.json({ success: true, data: dbres.rows[0] });
         } else {
-            res.json({success: false});
+            res.json({ success: false, msg: err });
         }
     });
 })
@@ -59,13 +59,15 @@ router.post('/updateinfo/:email', (req, res) => {
     const email = req.body.email;
     const name = req.body.name;
     const mobile = req.body.mobile;
+    const password = req.body.password;
 
     const old_email = req.params.email;
 
     res.header({ 'Access-Control-Allow-Origin': '*' });
 
     dbClient.query(`UPDATE users 
-                    SET email = '${email}', name = '${name}', mobile = '${mobile}'
+                    SET email = '${email}', name = '${name}', 
+                    mobile = '${mobile}', password = '${password}'
                     WHERE email = '${old_email}'`, (err, dbres) => {
                         if(err && err.code === UNIQUE_VIOLATION) {
                             res.json({ success: false, msg: 'User with the specified email already exists.' })
