@@ -27,6 +27,10 @@ app.use('/users', users);
 const tasks = require('./routes/tasks');
 app.use('/tasks', tasks);
 
+// connect to bids route
+const bids = require('./routes/bids');
+app.use('/bids', bids);
+
 app.listen(portNumber, () => {
     console.log('Server is listening on port ' + portNumber);
 });
