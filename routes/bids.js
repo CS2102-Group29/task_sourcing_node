@@ -12,8 +12,8 @@ router.post('/new', (req, res) => {
     res.header({ 'Access-Control-Allow-Origin': '*' });
 
     dbClient.query(`INSERT INTO bid_task VALUES (
-                        '${task_id}', '${bidder_email}', '${bid}', FALSE);`, (err, dbres) => {
-                            console.log(err);
+                        '${task_id}', '${bidder_email}', '${bid}', FALSE)
+                        ON CONFLICT (task_id, bidder_email) DO UPDATE SET bid = excluded.bid;`, (err) => {
                             if (err) {
                                 res.json({ success: false });
                             } else {
