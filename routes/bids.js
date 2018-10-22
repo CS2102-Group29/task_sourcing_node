@@ -44,7 +44,7 @@ router.get('/:email/:status', (req, res) => {
                         if(err) {
                             res.json({ success: false, msg: err });
                         } else {
-                            res.json({ success: true, msg: dbres.rows });
+                            res.json({ success: true, data: dbres.rows });
                         }
                     });
 
