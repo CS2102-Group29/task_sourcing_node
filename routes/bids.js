@@ -15,7 +15,7 @@ router.post('/new', (req, res) => {
                         '${task_id}', '${bidder_email}', '${bid}', 'ongoing')
                         ON CONFLICT (task_id, bidder_email) DO UPDATE SET bid = excluded.bid;`, (err) => {
                             if (err) {
-                                res.json({ success: false, msg: 'Failed to record your bid.' });
+                                res.json({ success: false, msg: 'Failed to record your bid.', err: err });
                             } else {
                                 res.json({ success: true, msg: 'Your bid has been recorded. Bid 0 to withdraw bid.' });
                             }
@@ -66,7 +66,7 @@ router.get('/accept/:task_id/:bidder_email', (req, res) => {
 });
 
 // get successful / ongoing / unsuccessful bids
-router.get('/:email/:status', (req, res) => {
+router.get('/:email/status/:status', (req, res) => {
     const email = req.params.email;
     const status = req.params.status; // status should be 'success', 'ongoing' or 'fail'
 
