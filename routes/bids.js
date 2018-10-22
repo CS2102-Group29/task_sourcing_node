@@ -33,20 +33,20 @@ router.get('/', (req, res) => {
 });
 
 // get successful / ongoing / unsuccessful bids
-router.get('/bids/:email/:status', (req, res) => {
+router.get('/:email/:status', (req, res) => {
     const email = req.params.email;
     const status = req.params.status; // status should be 'success', 'ongoing' or 'fail'
 
     res.header({ 'Access-Control-Allow-Origin': '*' });
 
     dbClient.query(`SELECT * FROM bid_task 
-                    WHERE email = '${email}' AND status = '${status}';`, (err, dbres) => {
+                    WHERE bidder_email = '${email}' AND status = '${status}';`, (err, dbres) => {
                         if(err) {
                             res.json({ success: false, msg: err });
                         } else {
-                            res.json({ success: false, msg: dbres.rows });
+                            res.json({ success: true, msg: dbres.rows });
                         }
-                    })
+                    });
 
 });
 
