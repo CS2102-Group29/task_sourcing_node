@@ -23,4 +23,12 @@ router.post('/new', (req, res) => {
     );
 });
 
+router.get('/', (req, res) => {
+    res.header({ 'Access-Control-Allow-Origin': '*' });
+
+    dbClient.query('SELECT * FROM bid_task')
+        .then(dbres => res.json({ success: true, data: dbres.rows }))
+        .catch(err => res.json({ success: false, err: err}));
+});
+
 module.exports = router;
