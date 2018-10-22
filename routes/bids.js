@@ -39,7 +39,7 @@ router.get('/:email/:status', (req, res) => {
 
     res.header({ 'Access-Control-Allow-Origin': '*' });
     
-    dbClient.query(`SELECT t1.title AS task, u1.name AS taskee_name, bt1.bid AS your_bid, mb1.min_bid AS lowest_bid 
+    dbClient.query(`SELECT t1.title AS task, t1.id, u1.name AS taskee_name, u1.email, bt1.bid AS your_bid, mb1.min_bid AS lowest_bid 
                     FROM tasks t1 
                     INNER JOIN users u1 ON u1.email = t1.taskee_email
                     INNER JOIN bid_task bt1 ON t1.id = bt1.task_id
