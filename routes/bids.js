@@ -15,12 +15,25 @@ router.post('/new', (req, res) => {
                         '${task_id}', '${bidder_email}', '${bid}', 'ongoing')
                         ON CONFLICT (task_id, bidder_email) DO UPDATE SET bid = excluded.bid;`, (err) => {
                             if (err) {
-                                res.json({ success: false });
+                                res.json({ success: false, msg: 'Failed to record your bid.' });
                             } else {
-                                res.json({ success: true, data: req.body });
+                                res.json({ success: true, msg: 'Your bid has been recorded. Bid 0 to withdraw bid.' });
                             }
                         }
     );
+});
+
+// get a single bidding data based on task_id and bidder_email
+router.get('/:id/:email', (req, res) => {
+    const task_id = req.params.id;
+    const bidder_email = req.params.email;
+
+    res.header({ 'Access-Control-Allow-Origin': '*' });
+
+    dbClient.query(`SELECT * FROM bid_task
+                    WHERE task_id = ${task_id} AND bidder_email = '${bidder_email}'`)
+        .then(dbres => res.json({ success: true, data: dbres.rows[0] }))
+        .catch(err => res.json({ success: false, err: err}));
 });
 
 // get all bids
@@ -48,7 +61,7 @@ router.get('/:email/:status', (req, res) => {
                         FROM bid_task bt2
                         GROUP BY bt2.task_id
                     ) AS mb1
-                    WHERE mb1.task_id = bt1.task_id AND bt1.bidder_email = '${email}' AND bt1.status = '${status}';`, (err, dbres) => {
+                    WHERE mb1.task_id = bt1.task_id AND bt1.bidder_email = '${email}' AND bt1.status = '${status}'`, (err, dbres) => {
                         if(err) {
                             res.json({ success: false, msg: err });
                         } else {

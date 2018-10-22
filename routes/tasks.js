@@ -43,7 +43,6 @@ router.post('/new', (req, res) => {
                 .then(dbres => res.json({ success: true, data: req.body }))
                 .catch(err => res.json({ success: false, err: err }));
     });
-    
 });
 
 module.exports = router;
