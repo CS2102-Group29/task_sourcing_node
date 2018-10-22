@@ -38,9 +38,17 @@ router.get('/:email/:status', (req, res) => {
     const status = req.params.status; // status should be 'success', 'ongoing' or 'fail'
 
     res.header({ 'Access-Control-Allow-Origin': '*' });
-
-    dbClient.query(`SELECT * FROM bid_task 
-                    WHERE bidder_email = '${email}' AND status = '${status}';`, (err, dbres) => {
+    
+    dbClient.query(`SELECT t1.title AS task, u1.name AS taskee_name, bt1.bid AS your_bid, mb1.min_bid AS lowest_bid 
+                    FROM tasks t1 
+                    INNER JOIN users u1 ON u1.email = t1.taskee_email
+                    INNER JOIN bid_task bt1 ON t1.id = bt1.task_id
+                    CROSS JOIN (
+                        SELECT bt2.task_id AS task_id, MIN(bt2.bid) as min_bid
+                        FROM bid_task bt2
+                        GROUP BY bt2.task_id
+                    ) AS mb1
+                    WHERE mb1.task_id = bt1.task_id AND bt1.bidder_email = '${email}' AND bt1.status = '${status}';`, (err, dbres) => {
                         if(err) {
                             res.json({ success: false, msg: err });
                         } else {
