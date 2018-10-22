@@ -32,6 +32,26 @@ router.get('/', (req, res) => {
         .catch(err => res.json({ success: false, err: err}));
 });
 
+// accept the bid
+router.get('/accept/:task_id/:bidder_email', (req, res) => {
+    const task_id = req.params.task_id;
+    const bidder_email = req.params.bidder_email;
+    const query = `UPDATE bid_task SET status = 'success'
+                WHERE bidder_email = '${bidder_email}' AND task_id = ${task_id};
+                UPDATE bid_task SET status = 'fail'
+                WHERE bidder_email <> '${bidder_email}' AND task_id = ${task_id};`
+
+    res.header({ 'Access-Control-Allow-Origin': '*' });
+
+    dbClient.query(query, (err) => {
+        if (err) {
+            res.json({ success: false, err: err });
+        } else {
+            res.json({ success: true, data: req.body });
+        }
+    });
+});
+
 // get successful / ongoing / unsuccessful bids
 router.get('/:email/:status', (req, res) => {
     const email = req.params.email;
