@@ -77,6 +77,23 @@ router.post('/updateinfo/:email', (req, res) => {
                     })
 });
 
+// update user profile image
+router.post('/updateimg/:email', (req, res) => {
+    const image = req.body.image;
+    const email = req.params.email;
+
+    res.header({ 'Access-Control-Allow-Origin': '*' });
+
+    dbClient.query(`UPDATE users SET image = BYTEA('${image}')
+                    WHERE email = '${email}';`, (err, dbres) => {
+                        if(err) {
+                            res.json({ success: false, msg: err });
+                        } else {
+                            res.json({ success: true, msg: 'Profile image is updated successfully.'});
+                        }
+                    })
+});
+
 // authenticate user (check email exists and password is correct)
 router.post('/authenticate', (req, res) => {
     const email = req.body.email;
