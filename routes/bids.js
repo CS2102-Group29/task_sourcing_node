@@ -40,7 +40,12 @@ router.get('/:id/:email', (req, res) => {
 router.get('/', (req, res) => {
     res.header({ 'Access-Control-Allow-Origin': '*' });
 
-    dbClient.query('SELECT * FROM bid_task')
+    let query = 'SELECT * FROM bid_task';
+    if (req.query.task_id) {
+        query += ` WHERE task_id = ${req.query.task_id}`
+    }
+
+    dbClient.query(query)
         .then(dbres => res.json({ success: true, data: dbres.rows }))
         .catch(err => res.json({ success: false, err: err}));
 });
@@ -71,9 +76,9 @@ router.get('/:email/status/:status', (req, res) => {
     const status = req.params.status; // status should be 'success', 'ongoing' or 'fail'
 
     res.header({ 'Access-Control-Allow-Origin': '*' });
-    
-    dbClient.query(`SELECT t1.title AS task, t1.id, u1.name AS taskee_name, u1.email, bt1.bid AS your_bid, mb1.min_bid AS lowest_bid 
-                    FROM tasks t1 
+
+    dbClient.query(`SELECT t1.title AS task, t1.id, u1.name AS taskee_name, u1.email, bt1.bid AS your_bid, mb1.min_bid AS lowest_bid
+                    FROM tasks t1
                     INNER JOIN users u1 ON u1.email = t1.taskee_email
                     INNER JOIN bid_task bt1 ON t1.id = bt1.task_id
                     CROSS JOIN (

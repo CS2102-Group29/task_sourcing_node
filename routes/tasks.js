@@ -7,7 +7,13 @@ const router = Router();
 router.get('/', (req, res) => {
     res.header({ 'Access-Control-Allow-Origin': '*' });
 
-    dbClient.query('SELECT * FROM tasks')
+    let query = 'SELECT * FROM tasks';
+
+    if (req.query.email) {
+        query += ` WHERE taskee_email = '${req.query.email}'`
+    }
+
+    dbClient.query(query)
         .then(dbres => res.json({ success: true, data: dbres.rows }))
         .catch(err => res.json({ success: false, err: err }));
 });
